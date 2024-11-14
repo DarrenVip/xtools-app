@@ -26,23 +26,39 @@ function createWindow(): void {
     }
   })
 
-
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
+  
+
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
+    console.log("oooooooooooooo")
     return { action: 'deny' }
   })
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F5') {
+      // 阻止默认的F5刷新行为
+      event.preventDefault();
+      mainWindow.webContents.send('before-input-event',input.key);
+    }
+    if(input.key === 'F10'){
+      event.preventDefault();
+      mainWindow.webContents.openDevTools()
+    }
+  });
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
+    
+
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-  
+    
   }
 }
 
@@ -75,8 +91,11 @@ app.whenReady().then(() => {
     }
   })
 
-  
+
+
   createWindow()
+
+
 
   // 处理来自预加载脚本的IPC消息
   ipcMain.handle('fetch-url', async (_, url, options) => {
@@ -89,11 +108,38 @@ app.whenReady().then(() => {
       return null;
     }
   });
-  
+  ipcMain.handle('set-proxy', async (_, proxyServer, proxyEnable) => {
+    const child_process = require('child_process');
+    //修改注册表实现网络代理   
+     try {
+
+          const regKey =  "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings";
+          if(proxyEnable){
+           child_process.exec(`reg add "${regKey}" /v ProxyServer /t REG_SZ /d ${proxyServer}`);
+           child_process.exec(`reg add "${regKey}" /v ProxyEnable /t REG_DWORD /d 1 /f`);
+           
+          }else{
+            child_process.exec(`reg add "${regKey}" /v ProxyEnable /t REG_DWORD /d 0 /f`);
+          }
+
+      } catch (error) {
+          console.log(error);
+      }
+  });
+
+  ipcMain.handle('get-proxy-enable', async () => {
+      
+      const value =  await getProxyValue();
+      let result: string = `${value}`;
+      return result.indexOf("0x1")>-1;
+      
+  });
+
   ipcMain.handle('get-app-path', async () => {
     return is.dev?app.getAppPath():join(app.getAppPath(),"../")
+   
   });
-  
+
   ipcMain.handle('get-version',() => app.getVersion());
 
   ipcMain.on('window-minimize', () =>  mainWindow.minimize());
@@ -113,13 +159,11 @@ app.whenReady().then(() => {
   tray.on('click', function () {
      mainWindow.show();
   });
-
+ 
+  //--proxy-server=http://127.0.0.1:20171,https://127.0.0.1:20172
   //app.commandLine.appendSwitch("disable-site-isolation-trials");
   
 })
-
-
-
 
 function createSetting(): void {
   // Create the browser window.
@@ -143,4 +187,26 @@ function createSetting(): void {
    } else {
     settingWindow.loadFile(join(__dirname, '../renderer/setting.html'))
    }
+}
+
+
+
+async function getProxyValue() {
+  
+  return new Promise((resolve, reject) =>{
+    
+    const child_process = require('child_process');
+      const regKey =  "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\ProxyEnable";
+      child_process.exec(`reg query "${regKey}"`, (error, stdout, stderr) => {
+        let result = error + stdout + stderr;
+        //console.log(error + stdout + stderr);
+        if(error){
+          reject(result);
+        }else{
+          resolve(result);          
+        }
+        
+     });
+  }); 
+  
 }

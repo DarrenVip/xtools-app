@@ -43,12 +43,15 @@
       </el-scrollbar>
     </el-aside>
       <el-main >
-          <webview v-for="item in iframeItems" :src="item.url" class="main-iframe" :style="item.display" 
+        <div v-for="item in iframeItems" style="height: 630px;" :style="[item.display?'display:block':'display:none']">
+        <el-progress :percentage="50" v-show="item.loading" :indeterminate="true" :show-text=false style="height: 1px;" /> 
+        <webview :id="item.id" :src="item.url" class="main-iframe" :style="[item.display?display_show:display_hide]" 
               @did-start-loading="onStartLoading(item)"
               @did-finish-load="onFinishLoad(item)"
+              @did-fail-load = "onFailLoad(item)"
               >
-          </webview>
-
+        </webview>
+      </div>
       </el-main>
     </el-container>
   </el-container>
@@ -159,9 +162,11 @@ Cherry,
 
 import jsonData from '@renderer/assets/data.json'
 
+
 const menuItems = ref(jsonData);
 
 const proxyState = ref({
+  server:"127.0.0.1:20171",
   state:false,
 });
 const viewState = ref({
@@ -169,18 +174,17 @@ const viewState = ref({
   downloadFileURL:"",
 });
 
-const display_show = "display:inline-flex; width:100%; height:99%";
+const display_show = "display:inline-flex; width:100%; height:630px";
 const display_hide = "display:none";
 
 const iframeItems = ref([
   { id:0.0,
     url:"",
     loading:true,
-    display:display_hide
+    display:false
   }
 ]);
 
-const loading =  ref(true)
 
 const { ipcRenderer } = require('electron');
 
@@ -252,7 +256,9 @@ async function loadRemoteData(frontTip){
           fs.unlink(filePath); 
           loadMenu();
 
-        })
+        }).catch(() => {
+        
+        });
       }else if(frontTip){
         ElMessageBox.confirm('本地已经是最新的了');
       }
@@ -268,54 +274,115 @@ async function  openSetting(){
   ElMessageBox.confirm('获取线上工具包更新?')
         .then(() => {
           loadRemoteData(true);
+        }).catch(() => {
+        
         });
 
 }
 
 function onStartLoading(i){
-  loading.value = true;
-  i.loading = true;
+  //loading.value = true;
+  //i.loading = true;
+  i.display = true;
 }
 
 function onFinishLoad(i){
-  loading.value = false;
+  //loading.value = false;
   i.loading = false;
-  i.display = display_show;
-
+  //i.display = display_show;
+  //i.success = true;
 }
-function toggleProxy(){
+function onFailLoad(item){
+  item.success = false;
+  ElMessageBox.confirm('加载失败是否按F5刷新页面?')
+      .then(() => {
+           refreshPage();
+      }).catch(() => {
+        
+      });
+}
+
+async function toggleProxy(){
+
+  console.log("toggleProxy---------");
+  
+  if(!proxyState.value.state){
+    window.api.setProxy(proxyState.value.server,true);
+  }else{
+    window.api.setProxy(proxyState.value.server,false);
+  }
+
   proxyState.value.state = !proxyState.value.state;
+  
+}
+
+function refreshPage(){
+  let elements = document.getElementsByClassName('main-iframe');
+   
+  for(let i=0;i<elements.length;i++){
+    const element = elements[i];
+    
+    if (window.getComputedStyle(element).display === 'none') {
+      //console.log('元素是隐藏的');
+   
+    } else {
+      console.log("refreshPage")
+
+      console.log(element);
+      //@ts-ignore
+      element.reload()
+
+      let foundItem = iframeItems.value.find((item) => (item.id+"" === element.id));
+      console.log(foundItem);
+      
+      if(foundItem){
+         foundItem.loading = true;
+         goPage(foundItem); 
+      }
+ 
+    }
+
+  }
+
+  
+
 }
 
 function goPage(menu){
   
-
-  let foundItem = iframeItems.value.find((item) => item.id === menu.id);
+  
+  let foundItem = iframeItems.value.find((item) => item.id == menu.id);
   
   if(foundItem){
-    
-    foundItem.display =foundItem.display== display_hide?display_show:display_hide;
 
+    foundItem.display = true;
+    
   }else{
     
     foundItem = {
         id:menu.id,
         url:menu.url,
         loading:true,
-        display:display_show
+        display:true
     }
+    
     iframeItems.value.push(foundItem)
 
   }
+  
   iframeItems.value.forEach(element => {
-      if(element!=foundItem){
-        element.display = display_hide;
-      }
+        if(element!=foundItem){
+           element.display = false;
+         }
   });
+
 }
 
 
-
+// async function loadProxy(){
+//   const proxyEnlable =  await window.api.getProxyEnable();
+//   proxyState.value.state = proxyEnlable;  
+// }
 
 async function loadMenu(){
   
@@ -343,30 +410,42 @@ async function loadMenu(){
       return;
     }else{
       menuItems.value = JSON.parse(data);
+      
+      if(menuItems.value.proxy){
+        proxyState.value.server = menuItems.value.proxy;
+      }
+      
       //加载欢迎页
       iframeItems.value[0]=
         { id:0.0,
           url:menuItems.value.home,
           loading:true,
-          display:display_show
+          display:true,
         }
-      
-
-      console.log(iframeItems);
-
     }
   });
 
 }
 
+//加载菜单数据
 loadMenu();
+
+//检查版本
 checkVersion();
 
+//延迟获取云端数据
 setTimeout(() => {
     loadRemoteData(false);
-}, 6000);
+}, 3000);
 
+//获取当前代理状态
 
+ipcRenderer.on('before-input-event', (_, message) => {
+  if(message==='F5'){
+    refreshPage();
+  }
+ 
+});
 
 </script>
 

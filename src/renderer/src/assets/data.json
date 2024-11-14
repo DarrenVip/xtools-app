@@ -1,7 +1,8 @@
 {
  "version":20241113,
- "author":"darren.host@foxmail.com",
  "home":"http://www.darren.host",
+ "author":"darren.host@foxmail.com",
+ "proxy":"127.0.0.1:20171",
  "data":
 [
     {
@@ -29,6 +30,11 @@
         "url": "/about",
         "items": [
             {
+                "id": 2.0,
+                "title": "Kimi助手",
+                "url": "https://kimi.moonshot.cn/"
+            },
+            {
                 "id": 2.1,
                 "title": "字节豆包",
                 "url": "https://doubao.com/"
@@ -40,7 +46,7 @@
             },
             {
                 "id": 2.3,
-                "title": "chatGPT",
+                "title": "ChatGPT",
                 "url": "https://chatgpt.com/"
             },
             {
@@ -67,12 +73,8 @@
                 "id": 2.8,
                 "title": "秘塔搜索",
                 "url": "https://metaso.cn/"
-            },
-            {
-                "id": 2.9,
-                "title": "Kimi助手",
-                "url": "https://kimi.moonshot.cn/"
             }
+            
         ]
     },
     {
@@ -108,7 +110,7 @@
             },
             {
                 "id": 3.6,
-                "title": "deepl",
+                "title": "Deep L",
                 "url": "https://www.deepl.com/zh/translator"
             }
         ]
@@ -121,9 +123,15 @@
         "items": [
             {
                 "id": 4.1,
-                "title": "美间抠图",
-                "url": "https://www.meijian.com/"
+                "title": "JSON格式化",
+                "url": "https://www.json.cn/"
+            },
+            {
+                "id": 4.2,
+                "title": "HTML编辑器",
+                "url": "https://www.json.cn/run/html5/"
             }
+            
         ]
     },
     {

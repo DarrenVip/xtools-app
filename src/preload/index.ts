@@ -6,45 +6,25 @@ const api = {
   
   openExternal: shell.openExternal,
 
+  //实现跨域http请求
   fetch: async (url, options) => {
     return ipcRenderer.invoke('fetch-url', url, options);
   },
-  getAppPath: () => ipcRenderer.invoke('get-app-path')
-  ,
+
+  //获取应用程序运行根目录
+  getAppPath: () => ipcRenderer.invoke('get-app-path'),
+
+  //获取引用程序当前版本号
   getVersion: () => ipcRenderer.invoke('get-version'),
-  
-  readFile:function(){
-    
+
+  //获取本地代理配置状态
+  getProxyEnable:  () => ipcRenderer.invoke('get-proxy-enable'),
+
+  //设置本地代理
+  setProxy: async(proxyServer,proxyEnable)=>{
+    console.log("set-proxy---")  
+    return ipcRenderer.invoke('set-proxy', proxyServer,proxyEnable);
   },
-
-  downloadMenuData(){
-    
-
-    return new Promise((resolve, reject) => {
-      const http = require('http');
-      const options = {
-          hostname: 'http://www.baidu.com/',
-          port: 80,
-          path: '/',
-          method: 'GET'
-      };
-      const req = http.request(options, (res) => {
-          let data = '';
-          res.on('data', (chunk) => {
-              data += chunk;
-          });
-          res.on('end', () => {
-            resolve(data);
-          });
-      });
-      req.on('error', (error) => {
-        reject(error);
-      });
-      req.end();  
-
-    });
-
-  }
 
 }
 
