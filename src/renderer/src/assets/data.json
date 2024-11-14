@@ -77,7 +77,7 @@
     },
     {
         "id": 3,
-        "icon": "Watermelon",
+        "icon": "CoffeeCup",
         "title": "语言翻译",
         "url": "/about",
         "items": [
@@ -115,7 +115,7 @@
     },
     {
         "id": 4,
-        "icon": "Watermelon",
+        "icon": "Apple",
         "title": "软件开发",
         "url": "/about",
         "items": [
@@ -128,7 +128,7 @@
     },
     {
         "id": 5,
-        "icon": "Watermelon",
+        "icon": "Cherry",
         "title": "图像设计",
         "url": "/about",
         "items": [
@@ -141,7 +141,7 @@
     },
     {
         "id": 6,
-        "icon": "Coffee",
+        "icon": "Dish",
         "title": "视频制作",
         "url": "/about",
         "items": [
@@ -167,7 +167,7 @@
     },
     {
         "id": 8,
-        "icon": "Coffee",
+        "icon": "IceCream",
         "title": "提示工程",
         "url": "/about",
         "items": [
