@@ -1,0 +1,8 @@
+version: 1.0.0
+files:
+  - url: xtools-app-1.0.0-setup.exe
+    sha512: b8mWuGerfvZ0l3OgpVq5xNObXdAHQwoBnlAQmm5PrnUqZzyBr6nLVFSRWf6WBNAqEPJJbuXT2dUPUKUawQ9CMw==
+    size: 84435574
+path: xtools-app-1.0.0-setup.exe
+sha512: b8mWuGerfvZ0l3OgpVq5xNObXdAHQwoBnlAQmm5PrnUqZzyBr6nLVFSRWf6WBNAqEPJJbuXT2dUPUKUawQ9CMw==
+releaseDate: '2024-11-13T10:38:30.883Z'

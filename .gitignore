@@ -1,5 +1,5 @@
 node_modules
-dist
+dist/win-unpacked
 out
 .DS_Store
 *.log*
