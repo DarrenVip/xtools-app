@@ -1,6 +1,7 @@
 # xtools-app
 
-An Electron application with Vue and TypeScript
+ AI 工具箱，可通过配置应用程序目录下 data.json 修改左侧菜单栏。
+ 技术栈：Nodejs、Electron、 Vue、Vite、
 
 ## Recommended IDE Setup
 
