@@ -1,0 +1,9 @@
+@import './base.css';
+
+body {
+  overflow: hidden;
+  background-image: url('./wavy-lines.svg');
+  background-size: cover;
+  margin: 0px;
+  padding: 0px;
+}
