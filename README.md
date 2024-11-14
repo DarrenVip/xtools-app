@@ -3,14 +3,14 @@
   <a href="https://github.com/darrenvip/xtools-app"><img src="https://github.com/DarrenVip/xtools-app/blob/master/src/renderer/src/assets/xtools.png" title="Logo" style="max-width:100%;" width="200" /></a>
 </div>
  
-# 简介
+## 简介
 
  AI 工具箱，可通过配置应用程序目录下 data.json 修改左侧菜单栏。
-# 技术栈：
+## 技术栈：
  
  Nodejs、Electron、 Vue、Vite、
 
-# 安装包
+## 安装包
   [xtools-app-1.0.0-setup.exe](https://github.com/DarrenVip/xtools-app/blob/master/dist/xtools-app-1.0.0-setup.exe)
 
 ## Recommended IDE Setup
