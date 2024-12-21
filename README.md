@@ -12,7 +12,8 @@
 
 ## 安装包
   [xtools-app-1.0.0-setup.exe](https://github.com/DarrenVip/xtools-app/blob/master/dist/xtools-app-1.0.0-setup.exe)
-  [xtools-app-1.1.0-setup.exe](https://github.com/DarrenVip/xtools-app/blob/master/dist/xtools-app-1.1.0-setup.exe)
+  [xtools-app-1.1.0-setup.exe](https://raw.githubusercontent.com/DarrenVip/xtools-app/refs/heads/master/dist/xtools-app-1.1.0-setup.exe)
+
 
 ## Recommended IDE Setup
 
